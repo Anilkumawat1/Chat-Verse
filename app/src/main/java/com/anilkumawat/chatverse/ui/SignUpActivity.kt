@@ -2,6 +2,7 @@ package com.anilkumawat.chatverse.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -24,7 +25,14 @@ class SignUpActivity : AppCompatActivity() {
         Initialize()
 
         tvLogin.setOnClickListener {
+
             val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+
+        }
+        btnSignUp.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
