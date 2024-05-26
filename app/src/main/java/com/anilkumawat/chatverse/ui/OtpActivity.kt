@@ -10,16 +10,13 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.anilkumawat.chatverse.R
 import com.anilkumawat.chatverse.databinding.ActivityOtpBinding
-import com.anilkumawat.chatverse.model.resendOtpModel
+import com.anilkumawat.chatverse.model.emailModel
 import com.anilkumawat.chatverse.model.validateOtpModel
 import com.anilkumawat.chatverse.repository.otpRepository
 import com.anilkumawat.chatverse.viewmodel.otpViewModel
@@ -118,7 +115,7 @@ class OtpActivity : AppCompatActivity() {
     }
     private fun timmerForResend(email : String){
         if(mBinding.resendOtp.text.toString()=="Resend otp"){
-            val resendOtp = resendOtpModel(email)
+            val resendOtp = emailModel(email)
             viewModel.resend(resendOtp)
         }
     }

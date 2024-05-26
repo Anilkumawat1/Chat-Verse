@@ -21,12 +21,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.anilkumawat.chatverse.databinding.ActivityLoginBinding
 import com.anilkumawat.chatverse.model.loginModel
+import com.anilkumawat.chatverse.model.loginUserModel
 import com.anilkumawat.chatverse.repository.loginRepository
+import com.anilkumawat.chatverse.utils.SessionManager
 import com.anilkumawat.chatverse.viewmodel.loginViewModel
 import com.anilkumawat.chatverse.viewmodelfactory.loginViewModelFactory
 import com.anilkumawat.mvvmloginsignup.utils.Resource
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener, View.OnKeyListener {
    private lateinit var mBinding: ActivityLoginBinding
@@ -64,18 +68,34 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusCha
                     alertDialog.dismiss()
                     val data = response.data!!.success
                     if(data){
-                        Toast.makeText(this,response.data.data.toString(),Toast.LENGTH_SHORT).show()
+
+                        val gson = Gson()
+
+                        // Parse JSON string to User object
+                        val user: loginUserModel = gson.fromJson(response.data.data.toString(), loginUserModel::class.java)
+                        showSnackbar("Successfully login")
+                        SessionManager.saveAuthToken(this,user.user.authToken)
+                        SessionManager.saveString(this,"user_name",user.user.name)
+                        SessionManager.saveString(this,"user_id",user.user._id)
+                        SessionManager.saveString(this,"user_email",user.user.email)
                         navigateToMainActivity()
+                    }
+                    else{
+                        showSnackbar(response.data.message[0].toString())
                     }
                 }
                 is Resource.Error->{
                     alertDialog.dismiss()
+                        showSnackbar(response.message.toString())
                 }
                 is Resource.Loading->{
                     alertDialog.show()
                 }
             }
         })
+        mBinding.forgotPassword.setOnClickListener {
+            navigateToForgotPasswordActivity()
+        }
     }
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
@@ -83,6 +103,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusCha
     }
     private fun navigateToSignupActivity(){
         val intent = Intent(this,SignUpActivity::class.java)
+        startActivity(intent)
+    }
+    private fun navigateToForgotPasswordActivity(){
+        val intent = Intent(this,ForgotPassword::class.java)
         startActivity(intent)
     }
     private fun validateEmail() : Boolean{
@@ -148,7 +172,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusCha
             }
         }
     }
-
+    private fun showSnackbar(message: String) {
+        Snackbar.make(mBinding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
     override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
         TODO("Not yet implemented")
     }

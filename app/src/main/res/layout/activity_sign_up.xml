@@ -50,7 +50,6 @@
                 android:text="Let get started !"
                 android:textAlignment="center"
                 android:textSize="30dp"
-                android:textColor="@color/textColorLightGreen"
                 android:textStyle="bold"/>
             <TextView
                 android:layout_width="match_parent"

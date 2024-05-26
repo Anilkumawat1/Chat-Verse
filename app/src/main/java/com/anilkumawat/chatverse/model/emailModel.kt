@@ -1,5 +1,5 @@
 package com.anilkumawat.chatverse.model
 
-data class resendOtpModel(
+data class emailModel(
     val email: String
 )
